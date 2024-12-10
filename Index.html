@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Jogo para Minha Princesa</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+      background: linear-gradient(to bottom right, #ffb3ba, #ffdfba);
+      color: #333;
+    }
+    h1 {
+      margin-top: 20px;
+      font-size: 2.5rem;
+    }
+    .question-container {
+      display: none;
+      margin-top: 30px;
+    }
+    .question {
+      font-size: 1.5rem;
+      margin-bottom: 20px;
+    }
+    .options {
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+    }
+    .option {
+      padding: 10px 20px;
+      background: #fff;
+      border-radius: 10px;
+      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+      cursor: pointer;
+      transition: transform 0.2s, background 0.2s;
+    }
+    .option:hover {
+      transform: scale(1.1);
+      background: #ffdfba;
+    }
+    .moveable {
+      position: relative;
+      transition: transform 0.3s ease;
+    }
+    .photo-container {
+      margin: 30px 0;
+      display: flex;
+      justify-content: center;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .photo-container img {
+      display: none;
+      width: 200px;
+      height: 200px;
+      border-radius: 15px;
+      box-shadow: 0 6px 10px rgba(0, 0, 0, 0.3);
+    }
+    .message {
+      margin-top: 30px;
+      font-size: 1.8rem;
+      display: none;
+    }
+    .success-photo {
+      margin-top: 20px;
+      color: green;
+      font-size: 1.2rem;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo das perguntas</h1>
+
+  <div class="question-container" id="question1">
+    <div class="question">Qual é a nossa data de aniversário de namoro?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(1, false)">15/07/2024</div>
+      <div class="option" onclick="checkAnswer(1, true)">01/08/2024</div>
+      <div class="option" onclick="checkAnswer(1, false)">20/08/2024</div>
+    </div>
+  </div>
+
+  <div class="question-container" id="question2">
+    <div class="question">Qual é a música que mais combina nos dois?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(2, false)">Mirrors</div>
+      <div class="option" onclick="checkAnswer(2, true)">Die with a Smile</div>
+      <div class="option" onclick="checkAnswer(2, false)">Those Eyes</div>
+    </div>
+  </div>
+
+  <div class="question-container" id="question3">
+    <div class="question">Quem manda na relação?</div>
+    <div class="options">
+      <div class="option moveable" id="manuella" onclick="checkAnswer(3, false)">Manuella</div>
+      <div class="option" onclick="checkAnswer(3, true)">Douglas</div>
+    </div>
+  </div>
+
+  <div class="question-container" id="question4">
+    <div class="question">O que eu mais amo em você?</div>
+    <div class="options">
+      <div class="option" onclick="checkAnswer(4, false)">Seu Corpo</div>
+      <div class="option" onclick="checkAnswer(4, false)">Seu Caráter</div>
+      <div class="option" onclick="checkAnswer(4, true)">Sua Risada</div>
+    </div>
+  </div>
+
+  <div class="success-photo" id="successPhoto">Parabéns! Você ganhou uma foto! 🥳</div>
+
+  <div class="photo-container">
+    <img id="photo1" src="foto1.jpg" alt="Foto 1">
+    <img id="photo2" src="foto2.jpg" alt="Foto 2">
+    <img id="photo3" src="foto3.jpg" alt="Foto 3">
+    <img id="photo4" src="foto4.jpg" alt="Foto 4">
+  </div>
+
+  <div class="message" id="successMessage">
+    <p>Parabéns, Amor! Você acertou todas! 😍</p>
+    <p>Amor, só queria lembrar que você é o melhor presente que Deus colocou na minha vida. Te amo! ❤️</p>
+  </div>
+
+  <audio id="backgroundMusic" loop>
+    <source src="musica.mp3" type="audio/mpeg">
+    Seu navegador não suporta o elemento de áudio.
+  </audio>
+
+  <script>
+    let currentQuestion = 1;
+    let unlockedPhotos = 0;
+
+    function showNextQuestion() {
+      const currentContainer = document.getElementById(`question${currentQuestion}`);
+      currentContainer.style.display = "none";
+
+      currentQuestion++;
+
+      const nextContainer = document.getElementById(`question${currentQuestion}`);
+      if (nextContainer) {
+        nextContainer.style.display = "block";
+      } else {
+        showSuccessMessage();
+      }
+    }
+
+    function unlockPhoto() {
+      unlockedPhotos++;
+      const photo = document.getElementById(`photo${unlockedPhotos}`);
+      if (photo) {
+        photo.style.display = "block";
+      }
+
+      // Mostrar mensagem de parabéns
+      const successPhoto = document.getElementById("successPhoto");
+      successPhoto.style.display = "block";
+      setTimeout(() => {
+        successPhoto.style.display = "none";
+      }, 2000); // Mensagem desaparece após 2 segundos
+    }
+
+    function checkAnswer(questionNumber, isCorrect) {
+      if (isCorrect) {
+        unlockPhoto();
+        showNextQuestion();
+      } else {
+        alert("Ops! Tente novamente. 😅");
+      }
+    }
+
+    function showSuccessMessage() {
+      const message = document.getElementById("successMessage");
+      message.style.display = "block";
+    }
+
+    // Iniciar música ao carregar o site
+    window.onload = () => {
+      const backgroundMusic = document.getElementById("backgroundMusic");
+      backgroundMusic.volume = 0.5; // Volume em 50%
+      backgroundMusic.play();
+    };
+
+    // Mover botão Manuella aleatoriamente
+    const manuellaButton = document.getElementById("manuella");
+    manuellaButton.addEventListener("mouseover", () => {
+      const x = Math.random() * 600 - 200;
+      const y = Math.random() * 600 - 200;
+      manuellaButton.style.transform = `translate(${x}px, ${y}px)`;
+    });
+
+    document.getElementById("question1").style.display = "block";
+  </script>
+</body>
+</html>
